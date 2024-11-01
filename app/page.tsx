@@ -1,12 +1,20 @@
 'use client'
 
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowRight, MapPin, Users, Trophy, Heart, ArrowBigDownDash } from 'lucide-react';
-import ParticleBackground from './components/ParticleBackground';
 import SuccessStory from './components/SuccessStory';
 import StatCard from './components/StatCard';
-import MapWithMarkers from './components/MapWithMarkers'; // Ensure this import is correct
+
+// Dynamic imports with no SSR
+const ParticleBackground = dynamic(() => import('./components/ParticleBackground'), {
+  ssr: false
+});
+
+const MapWithMarkers = dynamic(() => import('./components/MapWithMarkers'), {
+  ssr: false
+});
 
 const successStories = [
   {
@@ -34,12 +42,17 @@ const impactStats = [
 ];
 
 export default function Home() {
+  const handleScroll = () => {
+    const element = document.getElementById('impact-map');
+    element?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="relative min-h-screen">
       {/* Hero Section */}
       <div className="relative h-screen flex items-center justify-center overflow-hidden">
         <ParticleBackground />
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
@@ -47,26 +60,16 @@ export default function Home() {
         >
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 gradient-text">सुधार Setu:</h1>
           <h1 className="text-7xl md:text-2xl text-blue-1000 mb-8">A Confluence Of New Ideas</h1>
-          <Link 
-            href="#impact-map"
-            onClick={(e) => {
-              e.preventDefault(); // Prevent default anchor behavior
-              const sectionElement = document.getElementById("impact-map");
-              if (sectionElement) {
-                sectionElement.scrollIntoView({ behavior: 'smooth' });
-              } else {
-                console.warn("Section with ID 'impact-map' not found!");
-              }
-            }}
+          <button
+            onClick={handleScroll}
             className="inline-flex items-center px-8 py-4 rounded-full bg-primary hover:bg-primary-dark transition-all transform hover:scale-105 text-white font-semibold text-lg shadow-lg hover:shadow-xl"
           >
             Explore Further
             <ArrowBigDownDash className="ml-2 h-5 w-5" />
-          </Link>
+          </button>
         </motion.div>
       </div>
 
-    
       {/* Success Stories */}
       <section id="success-stories" className="py-20">
         <div className="container mx-auto px-4">
@@ -93,7 +96,7 @@ export default function Home() {
       </section>
 
       {/* Global Impact Section with Map */}
-      <section className="py-20">
+      <section id="impact-map" className="py-20">
         <div className="container mx-auto px-4 text-center">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -103,7 +106,7 @@ export default function Home() {
           >
             Global Impact
           </motion.h2>
-          <MapWithMarkers />  {/* MapWithMarkers Component */}
+          <MapWithMarkers />
           <p className="mt-4 text-gray-700">
             Our initiatives span across the globe, making a difference in communities worldwide.
           </p>
@@ -113,7 +116,7 @@ export default function Home() {
       {/* Call to Action */}
       <section className="py-20">
         <div className="container mx-auto px-4">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
@@ -125,9 +128,9 @@ export default function Home() {
             <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
               Join thousands of change-makers who are transforming India, one initiative at a time.
             </p>
-            <Link 
+            <Link
               href="/join"
-              className="inline-flex items-center px-8sa py-4 rounded-full bg-primary hover:bg-primary-dark transition-all transform hover:scale-105 text-white font-semibold text-lg"
+              className="inline-flex items-center px-8 py-4 rounded-full bg-primary hover:bg-primary-dark transition-all transform hover:scale-105 text-white font-semibold text-lg"
             >
               Start Your Journey
               <ArrowRight className="ml-2 h-5 w-5" />
