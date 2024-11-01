@@ -2,36 +2,51 @@
 
 import { useState } from 'react';
 
+interface FormData {
+  name: string;
+  email: string;
+  phone: string;
+  resume: File | null;
+  message: string;
+}
+
 export default function Volunteer() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
     phone: '',
-    resume: null as File | null,
+    resume: null,
     message: ''
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value, files } = e.target;
+    const target = e.target;
 
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: name === 'resume' && files ? files[0] : value // Handle file input for resume
-    }));
+    if (target instanceof HTMLInputElement && target.type === 'file') {
+      // Handle file input
+      const file = target.files?.[0] || null;
+      setFormData((prevData) => ({
+        ...prevData,
+        [target.name]: file
+      }));
+    } else {
+      // Handle text inputs
+      setFormData((prevData) => ({
+        ...prevData,
+        [target.name]: target.value
+      }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Prepare form data for submission
     const data = new FormData();
-    for (const key in formData) {
-      if (key === 'resume' && formData[key]) {
-        data.append(key, formData[key]); // Append the file if it exists
-      } else {
-        data.append(key, formData[key] as string); // Append other fields
+    Object.entries(formData).forEach(([key, value]) => {
+      if (value !== null) {
+        data.append(key, value);
       }
-    }
+    });
 
     try {
       const response = await fetch('/api/volunteer', {
