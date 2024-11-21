@@ -1,7 +1,20 @@
 {
   "compilerOptions": {
+    "baseUrl": "app", // Base directory for relative imports
+    "paths": {
+      "@firebase/": [
+        "firebase/"
+      ], // Correct path alias for firebase
+      "@/": [
+        "./"
+      ] // Alias for the root directory
+    },
     "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -17,11 +30,16 @@
       {
         "name": "next"
       }
-    ],
-    "paths": {
-      "@/*": ["./*"]
-    }
+    ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "*/.ts",
+    "*/.tsx",
+    ".next/types/*/.ts",
+    "next-env.d.ts",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

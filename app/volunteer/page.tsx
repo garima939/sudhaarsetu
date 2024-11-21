@@ -120,7 +120,7 @@ export default function Volunteer() {
             id="resume"
             onChange={handleChange}
             accept=".pdf,.doc,.docx"
-            required
+            
             className="mt-1 block w-full p-2 border border-gray-300 rounded"
           />
         </div>
